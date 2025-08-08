@@ -16,13 +16,14 @@ import { ref, onMounted } from 'vue'
 import { io } from 'socket.io-client'
 import axios from 'axios'
 
-const socket = io('http://localhost:5000')
+const apiUrl = process.env.VUE_APP_API_URL || 'http://localhost:5000'
+const socket = io(apiUrl)
 const messages = ref([])
 const newMessage = ref('')
 const sender = prompt('Enter your name (User or Agent)') || 'User'
 
 onMounted(async () => {
-  const res = await axios.get('http://localhost:5000/messages')
+  const res = await axios.get(`${apiUrl}/messages`)
   messages.value = res.data
 
   socket.on('receive_message', (data) => {
